@@ -1,65 +1,119 @@
+import React, {useState} from "react"
 import Head from 'next/head'
-import styles from '../styles/Home.module.css'
 
-export default function Home() {
+import Result from "../organisms/result"
+
+import connector from "../lib/connector"
+
+function Home({search, searchActions}) {
+  const {
+    querying,
+    items,
+    pagination
+  } = search
+  const [text, setText] = useState("")
+  const [engine, setEngine] = useState('google')
+  
+  const onSearch = () => {
+    searchActions.query(text, { engine })
+  }
+  
+  const onTextChange = (event) => {
+    setText(event.currentTarget.value)
+  }
+  
+  const onEngineChange = (event) => {
+    setEngine(event.currentTarget.value)
+  }
+  
+  const onNextPage = () => {
+    searchActions.paginate(text, { engine, page: pagination.page + 1 })
+  }
+  
+  const renderLoader = () => {
+    return (
+      <div className="text-center mb-2">
+        <img src="/images/loader.gif"/>
+      </div>
+    )
+  }
+  
+  const renderEmptyData = () => {
+    if (querying) {
+      return renderLoader()
+    }
+
+    if (items.length === 0) {
+      return null
+    }
+  }
+  
+  const renderData = () => {
+    if (items.length === 0) {
+      return null
+    }
+    return (
+      <>
+        {items.map((item, index) => {
+          return <Result key={`result-${index}`} {...item}/>
+        })}
+        {querying ? renderLoader() : (
+          <div className="text-center mb-4">
+            <nav aria-label="Load more pagination">
+              <ul class="pagination justify-content-center">
+                <li class="page-item"><a class="page-link" onClick={onNextPage}>Load More</a></li>
+              </ul>
+            </nav>
+          </div>
+        )}
+      </>
+    )
+  }
+
   return (
-    <div className={styles.container}>
+    <div className="h-100">
       <Head>
-        <title>Create Next App</title>
+        <title>Hepu Search Engine</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
-
-      <main className={styles.main}>
-        <h1 className={styles.title}>
-          Welcome to <a href="https://nextjs.org">Next.js!</a>
-        </h1>
-
-        <p className={styles.description}>
-          Get started by editing{' '}
-          <code className={styles.code}>pages/index.js</code>
-        </p>
-
-        <div className={styles.grid}>
-          <a href="https://nextjs.org/docs" className={styles.card}>
-            <h3>Documentation &rarr;</h3>
-            <p>Find in-depth information about Next.js features and API.</p>
-          </a>
-
-          <a href="https://nextjs.org/learn" className={styles.card}>
-            <h3>Learn &rarr;</h3>
-            <p>Learn about Next.js in an interactive course with quizzes!</p>
-          </a>
-
-          <a
-            href="https://github.com/vercel/next.js/tree/master/examples"
-            className={styles.card}
-          >
-            <h3>Examples &rarr;</h3>
-            <p>Discover and deploy boilerplate example Next.js projects.</p>
-          </a>
-
-          <a
-            href="https://vercel.com/import?filter=next.js&utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-            className={styles.card}
-          >
-            <h3>Deploy &rarr;</h3>
-            <p>
-              Instantly deploy your Next.js site to a public URL with Vercel.
-            </p>
-          </a>
-        </div>
-      </main>
-
-      <footer className={styles.footer}>
-        <a
-          href="https://vercel.com?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Powered by{' '}
-          <img src="/vercel.svg" alt="Vercel Logo" className={styles.logo} />
-        </a>
-      </footer>
+      <div className="container-md">
+        <header className="row mt-4">
+          <div className="col text-center">
+            <h1>Search Engine</h1>
+          </div>
+        </header>
+        <section className="form-group row mt-4">
+          <div className="col">
+            <input type="text"
+                   class="form-control"
+                   id="text"
+                   name="text"
+                   aria-describedby="searchText"
+                   placeholder="Type your search..."
+                   value={text}
+                   onChange={onTextChange}
+                   disabled={querying}/>
+          </div>
+          <div className="col-lg-2">
+            <select className="custom-select" onChange={onEngineChange} value={engine} disabled={querying}>
+              <option value="google">Google</option>
+              <option value="bing">Bing</option>
+              <option value="both">Both</option>
+            </select>
+          </div>
+          <div className="col-lg-2 text-right">
+            <button type="submit" class="btn btn-primary btn-block" onClick={onSearch} disabled={querying || text.trim().length === 0}>Search</button>
+          </div>
+        </section>
+        <section className="row">
+          <div className="col">
+            {items.length === 0 && pagination.page === 1 ? renderEmptyData() : null}
+            {items.length > 0 ? renderData() : null}
+          </div>
+        </section>
+      </div>
     </div>
   )
 }
+
+export default connector(['search'], ['search'])(Home)
