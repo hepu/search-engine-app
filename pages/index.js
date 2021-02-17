@@ -15,7 +15,9 @@ function Home({search, searchActions}) {
   const [engine, setEngine] = useState('google')
   
   const onSearch = () => {
-    searchActions.query(text, { engine })
+    if (text.trim().length > 0) {
+      searchActions.query(text, { engine })
+    }
   }
   
   const onTextChange = (event) => {
@@ -92,10 +94,23 @@ function Home({search, searchActions}) {
                    placeholder="Type your search..."
                    value={text}
                    onChange={onTextChange}
+                   onKeyPress={(event) => {
+                     if (event.charCode === 13) {
+                       onSearch()
+                     }
+                   }}
                    disabled={querying}/>
           </div>
           <div className="col-lg-2">
-            <select className="custom-select" onChange={onEngineChange} value={engine} disabled={querying}>
+            <select className="custom-select"
+                    onChange={onEngineChange}
+                    value={engine}
+                    disabled={querying}
+                    onKeyPress={(event) => {
+                      if (event.charCode === 13) {
+                        onSearch()
+                      }
+                    }}>
               <option value="google">Google</option>
               <option value="bing">Bing</option>
               <option value="both">Both</option>
