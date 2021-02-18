@@ -1,8 +1,9 @@
 export default {
-  lastText: null,
+  text: '',
+  engine: '',
   querying: false,
   items: [],
   pagination: {
-    page: 1
-  }
-}
+    page: 1,
+  },
+};

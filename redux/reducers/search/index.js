@@ -1,4 +1,4 @@
-import * as actionTypes from "../../actions/search/action-types"
+import * as actionTypes from '../../actions/search/action-types';
 
 import initialState from './initialState';
 
@@ -8,32 +8,30 @@ export default function Search(state = initialState, action) {
       return {
         ...state,
         querying: true,
-        lastText: action.payload.text,
+        text: action.payload.text,
+        engine: action.payload.engine,
         items: [],
-        pagination: action.payload.pagination
-      }
-      break;
+        pagination: {
+          page: 1,
+        },
+      };
     case actionTypes.PAGINATE_SEARCH:
       return {
         ...state,
         querying: true,
-        lastText: action.payload.text,
-        pagination: action.payload.pagination
-      }
-      break;
+        pagination: action.payload.pagination,
+      };
     case actionTypes.AGGREGATE_RESULTS:
       return {
         ...state,
         querying: false,
-        lastText: action.payload.text,
         items: [
           ...state.items,
-          ...action.payload.items
+          ...action.payload.items,
         ],
-        pagination: action.payload.pagination
-      }
-      break;
+        pagination: action.payload.pagination,
+      };
     default:
-      return { ...state }
+      return { ...state };
   }
 }
