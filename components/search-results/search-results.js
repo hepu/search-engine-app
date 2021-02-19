@@ -1,17 +1,18 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { useSelector } from 'react-redux';
-
-import { SearchTypes } from '../../redux/actions/search';
 
 import SearchResult from '../search-result';
 import Loader from '../loader';
+import SearchTypes from '../../redux/actions/search/types';
+import SearchType from '../../redux/reducers/search/types';
 
-function SearchResults({ searchActions }) {
-  const { querying, items, pagination } = useSelector((state) => state.search);
+function SearchResults({ search, searchActions }) {
+  const { querying, items, pagination } = search;
 
   const onNextPage = () => {
-    searchActions.paginate(pagination.page + 1);
+    if (!querying) {
+      searchActions.paginate(pagination.page + 1);
+    }
   };
 
   const renderItems = () => items.map((item) => (
@@ -49,6 +50,7 @@ function SearchResults({ searchActions }) {
 }
 
 SearchResults.propTypes = {
+  search: PropTypes.shape(SearchType).isRequired,
   searchActions: PropTypes.instanceOf(SearchTypes).isRequired,
 };
 

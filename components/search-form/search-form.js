@@ -1,27 +1,18 @@
-import React, { useState } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
-import { useSelector } from 'react-redux';
 
-import { SearchTypes } from '../../redux/actions/search';
+import SearchTypes from '../../redux/actions/search/types';
+import SearchType from '../../redux/reducers/search/types';
 
-const ENGINES = {
-  google: 'google',
-  bing: 'bing',
-  both: 'both',
-};
-const INITIAL_ENGINE = ENGINES.google;
-
-function SearchForm({ searchActions }) {
-  const [text, setText] = useState('');
-  const [engine, setEngine] = useState(INITIAL_ENGINE);
-  const { querying } = useSelector((state) => state.search);
+function SearchForm({ search, searchActions }) {
+  const { querying, text, engine } = search;
 
   const onTextChange = (event) => {
-    setText(event.currentTarget.value);
+    searchActions.changeText(event.currentTarget.value);
   };
 
   const onEngineChange = (event) => {
-    setEngine(event.currentTarget.value);
+    searchActions.changeEngine(event.currentTarget.value);
   };
 
   const onSearch = () => {
@@ -38,7 +29,7 @@ function SearchForm({ searchActions }) {
 
   return (
     <section className="form-group row mt-4">
-      <div className="col">
+      <div className="col mb-2">
         <input
           type="text"
           className="form-control"
@@ -52,7 +43,7 @@ function SearchForm({ searchActions }) {
           disabled={querying}
         />
       </div>
-      <div className="col-lg-2">
+      <div className="col-lg-2 mb-2">
         <select
           className="custom-select"
           onChange={onEngineChange}
@@ -65,7 +56,7 @@ function SearchForm({ searchActions }) {
           <option value="both">Both</option>
         </select>
       </div>
-      <div className="col-lg-2 text-right">
+      <div className="col-lg-2 mb-2 text-right">
         <button type="submit" className="btn btn-primary btn-block" onClick={onSearch} disabled={querying || text.trim().length === 0}>Search</button>
       </div>
     </section>
@@ -73,6 +64,7 @@ function SearchForm({ searchActions }) {
 }
 
 SearchForm.propTypes = {
+  search: PropTypes.shape(SearchType).isRequired,
   searchActions: PropTypes.instanceOf(SearchTypes).isRequired,
 };
 

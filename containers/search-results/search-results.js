@@ -3,7 +3,7 @@ import { bindActionCreators } from 'redux';
 
 import SearchResultsComponent from '../../components/search-results';
 
-import searchActions from '../../redux/actions/search';
+import * as searchActions from '../../redux/actions/search';
 
 const mapStateToProps = (state) => ({
   search: state.search,

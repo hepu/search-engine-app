@@ -1,6 +1,8 @@
+import { ENGINES } from './constants';
+
 export default {
   text: '',
-  engine: '',
+  engine: ENGINES.google,
   querying: false,
   items: [],
   pagination: {

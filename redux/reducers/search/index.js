@@ -31,6 +31,16 @@ export default function Search(state = initialState, action) {
         ],
         pagination: action.payload.pagination,
       };
+    case actionTypes.TEXT_CHANGE:
+      return {
+        ...state,
+        text: action.payload.text,
+      };
+    case actionTypes.ENGINE_CHANGE:
+      return {
+        ...state,
+        engine: action.payload.engine,
+      };
     default:
       return { ...state };
   }
