@@ -12,7 +12,7 @@ function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <div className="container-md">
-        <header className="row mt-4">
+        <header className="row pt-4">
           <div className="col text-center">
             <h1>Mega Search Engine</h1>
           </div>
