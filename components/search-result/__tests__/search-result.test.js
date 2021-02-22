@@ -11,11 +11,12 @@ describe('SearchResult tests', () => {
       description="Some description"
       displayUrl="http://google.com"
       source="google"
+      duplicateCount="2"
     />
   );
   const fullSearchResult = shallow(FullSearchResult);
 
   it('renders the search result data', () => {
-    expect(fullSearchResult.text()).toBe('http://google.com - googleSome titleSome description');
+    expect(fullSearchResult.text()).toBe('http://google.com - google - Duplicated results: 2Some titleSome description');
   });
 });

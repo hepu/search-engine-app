@@ -23,6 +23,7 @@ function SearchResults({ search, searchActions }) {
       description={item.description}
       displayUrl={item.displayUrl}
       source={item.source}
+      duplicateCount={item.duplicate_count}
     />
   ));
 
